@@ -10,7 +10,8 @@ Aplikasi manajemen catatan kuliah berbasis Web (*Client-Server Architecture*). P
 - **Public API (CORS Enabled)**: Menyediakan *endpoint* khusus agar aplikasi/kelompok lain dapat menarik data dari sistem ini.
 
 
-**Soal: Bagaimana cara aplikasi atau sistem dari kelompok lain menyambungkan (integrasi) ke aplikasi ini melalui API?**
+**Soal: 
+Bagaimana cara aplikasi atau sistem dari kelompok lain menyambungkan (integrasi) ke aplikasi ini melalui API?**
 
 Jawaban:
 Kelompok lain bertindak sebagai Client dan hanya perlu melakukan HTTP Request ke Public Endpoint yang sudah disediakan oleh sistem ini. Berikut adalah spesifikasi teknis integrasinya:
@@ -26,6 +27,7 @@ implementasi murni di sisi frontend kelompok lain menggunakan
 JavaScript:
 
 '''php
+
 fetch('http://localhost/ambis-dashboard/api-public-catatan.php?api_key=ambis-public-2026')
   .then(response => response.json())
   .then(res => {
@@ -34,6 +36,7 @@ fetch('http://localhost/ambis-dashboard/api-public-catatan.php?api_key=ambis-pub
          console.log("Isi Catatan:", res.data);
      }
   })
+
 '''
 ## Struktur Folder
 
