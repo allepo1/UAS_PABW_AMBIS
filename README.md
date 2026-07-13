@@ -1,13 +1,45 @@
-# Ambis — Dashboard Catatan Kuliah
+# AMBIS — Dashboard Catatan Kuliah (UAS PABW)
 
-Struktur proyek ini dipecah dari satu file HTML menjadi folder PHP + CSS + JS terpisah,
-dengan halaman sendiri untuk setiap menu di sidebar.
+Aplikasi manajemen catatan kuliah berbasis Web (*Client-Server Architecture*). Proyek ini merupakan pembaruan dari versi *front-end statis* menjadi aplikasi dinamis penuh menggunakan **Database MySQL**, **PHP (PDO)**, dan Autentikasi **JWT (JSON Web Token)**.
 
+## 🚀 Fitur Utama Sistem
+- **Sistem Akun & Keamanan**: Menggunakan JWT yang disuntikkan ke dalam *Cookie* untuk sesi *login* yang aman, mencegah eksploitasi perpindahan halaman, dan menjaga isolasi data antar pengguna.
+- **CRUD Catatan (Database)**: Buat, baca, perbarui, dan hapus catatan teks. Data tersimpan permanen di MySQL, bukan lagi di `localStorage`.
+- **Rekaman Suara (*Server-Side*)**: Merekam audio penjelasan dosen langsung dari mikrofon (*MediaRecorder API*) dan mengunggahnya secara fisik ke *folder* `uploads/` di *server*.
+- **Kanvas Digital**: Menggambar diagram/sketsa dengan dukungan layar sentuh (*Pointer Events API*) dan menyimpannya sebagai *Base64* ke dalam *database*.
+- **Public API (CORS Enabled)**: Menyediakan *endpoint* khusus agar aplikasi/kelompok lain dapat menarik data dari sistem ini.
+
+
+**Soal: Bagaimana cara aplikasi atau sistem dari kelompok lain menyambungkan (integrasi) ke aplikasi ini melalui API?**
+
+Jawaban:
+Kelompok lain bertindak sebagai Client dan hanya perlu melakukan HTTP Request ke Public Endpoint yang sudah disediakan oleh sistem ini. Berikut adalah spesifikasi teknis integrasinya:
+
+Endpoint URL: http://localhost/ambis-dashboard/api-public-catatan.php?api_key=ambis-public-2026
+
+HTTP Method: GET
+
+Format Response: JSON (JavaScript Object Notation)
+
+Contoh: 
+implementasi murni di sisi frontend kelompok lain menggunakan 
+JavaScript:
+
+'''php
+fetch('http://localhost/ambis-dashboard/api-public-catatan.php?api_key=ambis-public-2026')
+  .then(response => response.json())
+  .then(res => {
+     if (res.status === 'success') {
+         console.log("Total Data:", res.total_data);
+         console.log("Isi Catatan:", res.data);
+     }
+  })
+'''
 ## Struktur Folder
 
-```
+```text
 ambis-dashboard/
-├─ index.php          → Dashboard (ringkasan, statistik, aktivitas)
+├─ index.php           → Dashboard (ringkasan, statistik, aktivitas)
 ├─ catatan.php         → Semua Catatan (CRUD lengkap, cari & filter kategori)
 ├─ workspace.php       → Workspace per mata kuliah
 ├─ rekaman.php         → Rekaman Suara (perekam mikrofon nyata)
@@ -25,41 +57,13 @@ ambis-dashboard/
 └─ js/
    ├─ data.js          → Data & helper bersama (localStorage)
    ├─ main.js          → Toast, dropdown notifikasi, sidebar mobile, ripple
-   ├─ dashboard.js      → Logic khusus Dashboard
-   ├─ catatan.js         → CRUD & pencarian catatan
-   ├─ workspace.js       → Hitung jumlah catatan per workspace
-   ├─ kategori.js        → Render kartu kategori
-   ├─ rekaman.js         → Perekam suara (MediaRecorder API)
-   ├─ kanvas.js          → Kanvas gambar (Pointer Events API)
-   └─ pengaturan.js      → Simpan profil & preferensi
-```
+   ├─ dashboard.js     → Logic khusus Dashboard
+   ├─ catatan.js       → CRUD & pencarian catatan
+   ├─ workspace.js     → Hitung jumlah catatan per workspace
+   ├─ kategori.js      → Render kartu kategori
+   ├─ rekaman.js       → Perekam suara (MediaRecorder API)
+   ├─ kanvas.js        → Kanvas gambar (Pointer Events API)
+   └─ pengaturan.js    → Simpan profil & preferensi
+   '''
 
-## Cara Menjalankan
-
-Butuh PHP terpasang di komputer (PHP 7.4+ atau 8.x).
-
-```bash
-cd ambis-dashboard
-php -S localhost:8000
-```
-
-Lalu buka `http://localhost:8000` di browser.
-
-Bisa juga dijalankan lewat XAMPP/Laragon: cukup salin folder `ambis-dashboard`
-ke folder `htdocs`/`www`, lalu buka `http://localhost/ambis-dashboard`.
-
-## Catatan Fitur
-
-- **Data** disimpan di `localStorage` browser (bukan database), jadi konsisten
-  saat pindah halaman tapi hanya tersimpan di perangkat/browser yang sama.
-  Untuk direset, buka menu **Pengaturan → Reset Data Lokal**.
-- **Rekaman Suara**: memakai `MediaRecorder` + `Web Audio API`, browser akan
-  meminta izin akses mikrofon. Rekaman baru disimpan sebagai audio asli
-  (bisa diputar ulang). Dua contoh rekaman awal sengaja ditandai "contoh"
-  dan tidak memiliki file audio sungguhan.
-- **Kanvas Digital**: memakai `Pointer Events API` sehingga bisa digambar
-  dengan mouse, trackpad, maupun jari di layar sentuh. Kanvas otomatis
-  menyesuaikan ukuran (responsif) tanpa merusak gambar yang sudah dibuat.
-- Sidebar otomatis menjadi ikon-saja pada tablet, dan menjadi drawer
-  (tombol hamburger) pada layar ponsel kecil, dengan daftar menu yang
-  tetap bisa di-scroll bila panjang.
+##
